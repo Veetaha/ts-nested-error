@@ -1,0 +1,41 @@
+{
+    "exclude": ["node_modules", "**/*.test.ts"],
+    "compilerOptions": {
+        "outDir": "build",
+
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "target": "esnext",
+
+        "plugins": [
+            { "transform": "ts-nameof", "type": "raw" }
+        ],
+
+        "declaration":    true,
+        "declarationMap": false,
+        "sourceMap":      false,
+
+        "allowJs":                      false,
+        "esModuleInterop":              false,
+        "allowSyntheticDefaultImports": false,
+        "importHelpers": true,
+
+        "strict":                           true,
+        "noUnusedLocals":                   true,
+        "noUnusedParameters":               true,
+        "noImplicitAny":                    true,
+        "noImplicitThis":                   true,
+        "noImplicitReturns":                true,
+        "noFallthroughCasesInSwitch":       true,
+        "strictBindCallApply":              true,
+        "strictFunctionTypes":              true,
+        "strictNullChecks":                 true,
+        "strictPropertyInitialization":     true,
+        "forceConsistentCasingInFileNames": true,
+        "noStrictGenericChecks":            false,
+        "allowUnreachableCode":             false,
+
+        "alwaysStrict": true,
+        "pretty":       true
+    }
+}

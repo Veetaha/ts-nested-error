@@ -1,0 +1,48 @@
+{
+  "name": "ts-nested-error",
+  "version": "1.0.0",
+  "description": "Lightweight xplatform nested error implementation with native TypeScript support.",
+  "main": "build/nested-error.js",
+  "scripts": {
+    "build": "       npm-run-all clean lint --parallel transpile",
+    "bump-deps": "   ncu --upgrade && npm install",
+    "test": "        jest && cat coverage/lcov.info | coveralls",
+    "test:debug": "  node --inspect-brk node_modules/.bin/jest --runInBand",
+    "clean": "       rimraf build",
+    "lint": "        tslint --project tsconfig.json",
+    "transpile": "   ttsc",
+    "start": "       node build/index.js",
+    "dev": "         ts-node-dev --compiler ttypescript --respawn --inspect -- src/nested-error.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://git.sami.int.thomsonreuters.com/Vitalii.Kryvenko/MicroservicesPoC.git"
+  },
+  "keywords": [
+    "nested",
+    "error",
+    "nested-error",
+    "typescript",
+    "ttypescript"
+  ],
+  "author": "Lynx Insight Dev <lynx.insight.dev@thomsonreuters.com>",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "@types/jest": "^24.0.18",
+    "@types/node": "^12.7.5",
+    "@types/ts-nameof": "^3.2.0",
+    "coveralls": "^3.0.6",
+    "jest": "^24.9.0",
+    "npm-check-updates": "^3.1.23",
+    "npm-run-all": "^4.1.5",
+    "rimraf": "^3.0.0",
+    "ts-jest": "^24.1.0",
+    "ts-nameof": "^3.2.0",
+    "ts-node": "^8.4.1",
+    "ts-node-dev": "^1.0.0-pre.40",
+    "tslint": "^5.20.0",
+    "ttypescript": "^1.5.7",
+    "typescript": "^3.6.3"
+  }
+}
