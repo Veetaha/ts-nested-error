@@ -2,7 +2,7 @@
 
 Super lightweight crossplatform (browser compatible) dependency-free nested error implementation.
 
-## `new NestedError(message: string, public readonly innerError?: Error)`
+### `new NestedError(message: string, public readonly innerError?: Error)`
 
 Class that provides `readonly innerError?: Error` property alongside with an error callstack (as `.stack` property) of original error eagerly
 combined with itself's. Deeply nested errors
@@ -31,7 +31,7 @@ Error: Connection timed out
     at ...
 ```
 
-## `NestedError.rethrow(message: string)` 
+### `NestedError.rethrow(message: string)` 
 Returns a function that throws `NestedError` or an object
 of class that is derived from it with the given `message`.
 This is mostly intended to be a shorthand to create error wrapping callbacks
@@ -48,7 +48,7 @@ database.get().then(
 );
 ```
 
-## `toError(err)`
+### `toError(err)`
 
 Returns `err` itself if `err instanceof Error === true`, otherwise attemts to
 stringify it and wrap into `Error` object to be returned.
