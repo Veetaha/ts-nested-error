@@ -1,5 +1,9 @@
 # ts-nested-error
 
+[![npm version](https://badge.fury.io/js/ts-nested-error.svg)](https://badge.fury.io/js/ts-nested-error)
+[![Build Status](https://travis-ci.com/Veetaha/ts-nested-error.svg?branch=master)](https://travis-ci.com/Veetaha/ts-nested-error)
+[![Coverage Status](https://coveralls.io/repos/github/Veetaha/ts-nested-error/badge.svg?branch=master)](https://coveralls.io/github/Veetaha/ts-nested-error?branch=master)
+
 Super lightweight crossplatform (browser compatible) dependency-free nested error implementation.
 
 ### `new NestedError(message: string, public readonly innerError?: Error)`
