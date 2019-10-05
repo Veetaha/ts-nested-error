@@ -13,13 +13,13 @@ Suppose you are handling some low-level error and need to throw a higher-level o
 This package provides an extremely concise C#-like `NestedError` implementation for you:
 
 ```ts
-    import { NestedError } from 'ts-nested-error';
+import { NestedError } from 'ts-nested-error';
 
-    try {
-        dataService.saveData(data);
-    } catch (err) {
-        throw new NestedError("DataService failed to save data", err);
-    }
+try {
+    dataService.saveData(data);
+} catch (err) {
+    throw new NestedError("DataService failed to save data", err);
+}
 ```
 This code will produce an error that when stringified shows the following message:
 ```
