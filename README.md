@@ -6,25 +6,24 @@
 
 Super lightweight crossplatform (browser compatible) dependency-free nested error implementation.
 
-### `new NestedError(message: string, public readonly innerError?: Error)`
+## :zap: Rationale
 
-Class that provides `readonly innerError?: Error` property alongside with an error callstack (as `.stack` property) of original error eagerly
-combined with itself's. Deeply nested errors
-form a list of callstacks and error messages that are concatenated.
+Suppose you are handling some low-level error and need to throw a higher-level one while having its original cause attached to it for debug purposes.
 
-**Example:**
+This package provides an extremely concise C#-like `NestedError` implementation for you:
 
 ```ts
+    import { NestedError } from 'ts-nested-error';
+
     try {
-        throw new Error('Connection timed out');
+        dataService.saveData(data);
     } catch (err) {
-        throw new NestedError(`Oh no, couldn't load file! More info in inner error`, err);
+        throw new NestedError("DataService failed to save data", err);
     }
 ```
-
-This code will produce an error that when stringifed shows the following message:
+This code will produce an error that when stringified shows the following message:
 ```
-NestedError: Oh no, couldn't load file! More info in inner error
+NestedError: DataService failed to save data
     at someMethod (/path/to/code.js:line:column)
     at ...
 
@@ -35,26 +34,53 @@ Error: Connection timed out
     at ...
 ```
 
-### `NestedError.rethrow(message: string)` 
-Returns a function that throws `NestedError` or an object
-of class that is derived from it with the given `message`.
-This is mostly intended to be a shorthand to create error wrapping callbacks
-for `Promise`s:
+## :scroll: Documentation
+Everything is strongly typed and you may expect good inline documentation from VSCode.
+
+## :sunglasses: Features of `NestedError`
+
+### Stack property
+Property `.stack` of `NestedError` is guaranteed to contain a string with error
+callstack if it is supported by runtime or `"${err.name}: ${err.message}"` as a fallback.
+
+### InnerError property
+
+`NestedError` constructor automatically coerces the value passed as the second argument `toError()` object and saves it in `.innerError` property. 
+
+
+### Promise error handler shortcut
+
+Suppose you invoke some async operation and don't want to to write verbose
+error handling lambda to pass as `onerror` callback to `.then()` or `.catch()`.
+
+Static `NestedError.rethrow(message)` method is here to shorten you code:
 
 ```ts
-import { NestedError } from 'ts-nested-error';
-
-class DbError extends NestedError {}
-
-database.get().then(
+userService.getPage().then(
     data => console.log(`Hooray! data: ${data}`),
-    DbError.rethrow('some database error happened') // throws instanceof DbError
+    err => {
+        throw new NestedError('failed to fetch users page', err);
+    }
+);
+
+  ↓ ↓ ↓ ↓ ↓ ↓
+
+userService.getPage().then(
+    data => console.log(`Hooray! data: ${data}`),
+    NestedError.rethrow('failed to fetch users page')
 );
 ```
+It just creates the same error handling callback that rethrows passed-in error with given `message`.
 
-### `toError(err)`
 
-Returns `err` itself if `err instanceof Error === true`, otherwise attemts to
+### Coerse values to Error
+
+Suppose you are handling an error within the catch clause.
+Though it may seem very unlikely, the thrown value is not required to be `instanceof Error`.
+
+Exported `toError(value)` free function ensures that for you.
+
+It returns `value` itself if `value instanceof Error`, otherwise attemts to
 stringify it and wrap into `Error` object to be returned.
 
 ```ts

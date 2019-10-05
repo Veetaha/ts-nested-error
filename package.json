@@ -1,6 +1,6 @@
 {
   "name": "ts-nested-error",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Lightweight xplatform nested error implementation with native TypeScript support.",
   "main": "build/nested-error.js",
   "scripts": {
@@ -14,20 +14,6 @@
     "start": "       node build/index.js",
     "dev": "         ts-node-dev --compiler ttypescript --respawn --inspect -- src/nested-error.ts"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://git.sami.int.thomsonreuters.com/Vitalii.Kryvenko/MicroservicesPoC.git"
-  },
-  "keywords": [
-    "nested",
-    "error",
-    "nested-error",
-    "typescript",
-    "ttypescript"
-  ],
-  "author": "Lynx Insight Dev <lynx.insight.dev@thomsonreuters.com>",
-  "license": "MIT",
-  "dependencies": {},
   "devDependencies": {
     "@types/jest": "^24.0.18",
     "@types/node": "^12.7.5",
@@ -44,5 +30,18 @@
     "tslint": "^5.20.0",
     "ttypescript": "^1.5.7",
     "typescript": "^3.6.3"
-  }
+  },
+  "author": "Veetaha",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Veetaha/ts-nested-error.git"
+  },
+  "keywords": [
+    "nested",
+    "error",
+    "nested-error",
+    "typescript",
+    "ttypescript"
+  ]
 }

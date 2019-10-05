@@ -13,6 +13,11 @@ export class NestedError extends Error {
      */
     readonly stack: string;
 
+    /**
+     * Optional reference to lower-level error that caused this error.
+     */
+    readonly innerError: Error | null;
+
     private static readonly getErrorReport = typeof new Error().stack === 'string'
         ? (err: Error) => err.stack!
         : (err: Error) => `${err.name}: ${err.message}`;
@@ -28,9 +33,7 @@ export class NestedError extends Error {
      * @param message Message to attach `NestedError` created by the returned function.
      */
     static rethrow(message: string) {
-        return (err: unknown) => {
-            throw new this(message, toError(err));
-        };
+        return (err: unknown) => { throw new this(message, err); };
     }
 
 
@@ -39,17 +42,20 @@ export class NestedError extends Error {
      * optional `innerError`.
      *
      * @param message    Laconic error message to attach to the created `NestedError`.
-     * @param innerError Optional `Error` that caused this higher level error.
+     * @param innerError Optional error that caused this higher level error.
      */
-    constructor(message?: string, readonly innerError?: Error) {
+    constructor(message?: string, innerError?: unknown) {
         super(message);
-
-        this.stack = !innerError
-            ?    NestedError.getErrorReport(this)
-            : `${NestedError.getErrorReport(this)
-            }\n\n======= INNER ERROR =======\n\n${
-                 NestedError.getErrorReport(innerError)
-            }`;
+        if (arguments.length >= 2) {
+            this.innerError = toError(innerError);
+            this.stack = `${NestedError.getErrorReport(this)
+                          }\n\n======= INNER ERROR =======\n\n${
+                            NestedError.getErrorReport(this.innerError)
+                          }`;
+        } else {
+            this.innerError = null;
+            this.stack      = NestedError.getErrorReport(this);
+        }
     }
 }
 
@@ -80,9 +86,9 @@ export function toError(err: unknown) {
             : new Error(`Value that is not an instance of Error was thrown: ${err}`);
     } catch (err) {
         return new Error(
-            'Failed to stringify non-instance of Error that was thrown.' +
-            'This is possibly due to the fact that toString() method of the value' +
-            'doesnt return a primitive value.'
+            "Failed to stringify non-instance of Error that was thrown." +
+            "This is possibly due to the fact that toString() method of the value" +
+            "doesn't return a primitive value."
         );
     }
 }
