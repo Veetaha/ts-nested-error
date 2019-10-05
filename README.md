@@ -80,7 +80,7 @@ Though it may seem very unlikely, the thrown value is not required to be `instan
 
 Exported `toError(value)` free function ensures that for you.
 
-It returns `value` itself if `value instanceof Error`, otherwise attemts to
+It returns `value` itself if `value instanceof Error`, otherwise attempts to
 stringify it and wrap into `Error` object to be returned.
 
 ```ts
