@@ -12,8 +12,8 @@
         ],
 
         "declaration":    true,
-        "declarationMap": false,
-        "sourceMap":      false,
+        "declarationMap": true,
+        "sourceMap":      true,
 
         "allowJs":                      false,
         "esModuleInterop":              false,
