@@ -1,6 +1,6 @@
 {
   "name": "ts-nested-error",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "Lightweight xplatform nested error implementation with native TypeScript support.",
   "main": "build/nested-error.js",
   "scripts": {
