@@ -73,7 +73,7 @@ userService.getPage().then(
 It just creates the same error handling callback that rethrows passed-in error with given `message`.
 
 
-### Coerse values to Error
+### Coerce values to Error
 
 Suppose you are handling an error within the catch clause.
 Though it may seem very unlikely, the thrown value is not required to be `instanceof Error`.
