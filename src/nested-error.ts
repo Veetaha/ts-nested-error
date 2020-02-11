@@ -39,10 +39,11 @@ export class NestedError extends Error {
 
     /**
      * Allocates an instance of `NestedError` with the given error `message` and
-     * optional `innerError`.
+     * optional `innerError` (which will be automatically coerced `toError()`).
      *
      * @param message    Laconic error message to attach to the created `NestedError`.
-     * @param innerError Optional error that caused this higher level error.
+     * @param innerError Optional error that caused this higher level error. This value
+     *                   will be automatically coerced `toError()`.
      */
     constructor(message?: string, innerError?: unknown) {
         super(message);

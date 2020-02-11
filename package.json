@@ -1,6 +1,6 @@
 {
   "name": "ts-nested-error",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "Lightweight xplatform nested error implementation with native TypeScript support.",
   "main": "build/nested-error.js",
   "scripts": {
@@ -15,21 +15,21 @@
     "dev": "         ts-node-dev --compiler ttypescript --respawn --inspect -- src/nested-error.ts"
   },
   "devDependencies": {
-    "@types/jest": "^24.0.18",
-    "@types/node": "^12.7.11",
-    "@types/ts-nameof": "^4.0.0",
-    "coveralls": "^3.0.6",
-    "jest": "^24.9.0",
-    "npm-check-updates": "^3.1.23",
+    "@types/jest": "^25.1.2",
+    "@types/node": "^13.7.1",
+    "@types/ts-nameof": "^4.2.1",
+    "coveralls": "^3.0.9",
+    "jest": "^25.1.0",
+    "npm-check-updates": "^4.0.1",
     "npm-run-all": "^4.1.5",
-    "rimraf": "^3.0.0",
-    "ts-jest": "^24.1.0",
-    "ts-nameof": "^4.0.3",
-    "ts-node": "^8.4.1",
+    "rimraf": "^3.0.2",
+    "ts-jest": "^25.2.0",
+    "ts-nameof": "^4.2.2",
+    "ts-node": "^8.6.2",
     "ts-node-dev": "^1.0.0-pre.40",
-    "tslint": "^5.20.0",
-    "ttypescript": "^1.5.7",
-    "typescript": "^3.6.3"
+    "tslint": "^6.0.0",
+    "ttypescript": "^1.5.10",
+    "typescript": "^3.7.5"
   },
   "author": "Veetaha",
   "license": "MIT",
