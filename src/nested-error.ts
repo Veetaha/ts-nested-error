@@ -8,7 +8,7 @@
 export class NestedError extends Error {
 
     /**
-     * Combined callstack of this error and error that caused it.
+     * Combined callstack of this error and the errors that it wraps.
      * If the JavaScript runtime doesn't support `Error::stack` property
      * this will contain only the concatenated messages.
      */
@@ -20,7 +20,8 @@ export class NestedError extends Error {
     readonly innerErrors: Error | Error[] | null;
 
     /**
-     * Provides the first `Error` of the `innerErrors` (if it exists).
+     * Provides the first `Error` of the `innerErrors` (if it exists);
+     * otherwise, `null`.
      *
      * @deprecated Please shift to using the `innerErrors` (with an 's') property.
      */

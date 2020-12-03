@@ -26,6 +26,7 @@ describe(nameof(NestedError), () => {
                 NestedError.rethrow('err-message')(err);
             } catch (thrownErr) {
                 expect(thrownErr).toHaveProperty('message', 'err-message');
+                expect(thrownErr).toHaveProperty('innerError', err);
                 expect(thrownErr).toHaveProperty('innerErrors', err);
             }
         });
@@ -46,6 +47,25 @@ describe(nameof(NestedError), () => {
             expect(nestedError).toHaveProperty('innerErrors');
             expect(nestedError.innerErrors).toEqual(errors);
         });
+
+        it("returns null when an empty array is passed to the constructor", () => {
+            const message = "Hello, Dolly!";
+            const errors:Error[] = [];
+            const nestedError = new NestedError(message, ...errors);
+            expect(nestedError).toHaveProperty('message', message);
+            expect(nestedError.innerErrors).toBeNull();
+            expect(nestedError.innerError).toBeNull();
+        });
+
+        it("returns null when no errors are passed to the constructor", () => {
+            const message = "Hello, Dolly!";
+            const nestedError = new NestedError(message);
+            expect(nestedError).toHaveProperty('message', message);
+            expect(nestedError.innerErrors).toBeNull();
+            expect(nestedError.innerError).toBeNull();
+        });
+
+
     });
 
 });
