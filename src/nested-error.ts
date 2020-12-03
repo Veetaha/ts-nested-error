@@ -26,10 +26,10 @@ export class NestedError extends Error {
      * @deprecated Please shift to using the `innerErrors` (with an 's') property.
      */
     get innerError() {
-        if(!this.innerErrors) {
+        if (!this.innerErrors) {
             return null;
-        } else if(this.innerErrors instanceof Array) {
-            if(this.innerErrors.length === 0) {
+        } else if (this.innerErrors instanceof Array) {
+            if (this.innerErrors.length === 0) {
                 return null;
             } else {
                 return this.innerErrors[0];
@@ -73,12 +73,13 @@ export class NestedError extends Error {
         if (errorLength === 1) {
             this.innerErrors = toError(innerErrors[0]);
             this.stack = `${thisErrorReport}\n\n======= INNER ERROR =======\n\n${NestedError.getErrorReport(this.innerErrors)}`;
-        } else if(errorLength > 1) {
-            this.innerErrors = innerErrors.map(toError);
-            this.stack = thisErrorReport + "\n\n" +
+        } else if (errorLength > 1) {
+            this.innerErrors = innerErrors.map( (err) => toError(err) );
+            this.stack = `${thisErrorReport}\n\n${
                 this.innerErrors.map(
-                    (error, idx) => `======= INNER ERROR (${idx+1} of ${errorLength}) =======\n\n${NestedError.getErrorReport(error)}`
-                ).join("\n\n");
+                    (error, idx) => `======= INNER ERROR (${idx + 1} of ${errorLength}) =======\n\n${NestedError.getErrorReport(error)}`
+                ).join("\n\n")
+            }`;
         } else {
             this.innerErrors = null;
             this.stack      = thisErrorReport;
