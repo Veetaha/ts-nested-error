@@ -6,17 +6,38 @@
  * lower level).
  */
 export class NestedError extends Error {
+
     /**
-     * Combined callstack of this error and error that caused it.
+     * Combined callstack of this error and the errors that it wraps.
      * If the JavaScript runtime doesn't support `Error::stack` property
      * this will contain only the concatenated messages.
      */
     readonly stack: string;
 
     /**
-     * Optional reference to lower-level error that caused this error.
+     * Optional reference to lower-level errors wrapped by this error.
      */
-    readonly innerError: Error | null;
+    readonly innerErrors: Error | Error[] | null;
+
+    /**
+     * Provides the first `Error` of the `innerErrors` (if it exists);
+     * otherwise, `null`.
+     *
+     * @deprecated Please shift to using the `innerErrors` (with an 's') property.
+     */
+    get innerError() {
+        if (!this.innerErrors) {
+            return null;
+        } else if (this.innerErrors instanceof Array) {
+            if (this.innerErrors.length === 0) {
+                return null;
+            } else {
+                return this.innerErrors[0];
+            }
+        } else {
+            return this.innerErrors;
+        }
+    }
 
     private static readonly getErrorReport = typeof new Error().stack === 'string'
         ? (err: Error) => err.stack!
@@ -28,34 +49,40 @@ export class NestedError extends Error {
      * this method was called directly in the context of that dervied class constructor)
      * with the given `message`.
      * Returned function will pass accepted `Error` object directly to `NestedError`
-     * as `innerError` by invoking `toError(err)` on it.
+     * as `innerErrors` by invoking `toError(err)` on it.
      *
      * @param message Message to attach `NestedError` created by the returned function.
      */
     static rethrow(message: string) {
-        return (err: unknown) => { throw new this(message, err); };
+        return (...errs: unknown[]) => { throw new this(message, ...errs); };
     }
 
 
     /**
      * Allocates an instance of `NestedError` with the given error `message` and
-     * optional `innerError` (which will be automatically coerced `toError()`).
+     * optional `innerError` (which will be automatically coerced using `toError()`).
      *
-     * @param message    Laconic error message to attach to the created `NestedError`.
-     * @param innerError Optional error that caused this higher level error. This value
-     *                   will be automatically coerced `toError()`.
+     * @param message     Laconic error message to attach to the created `NestedError`.
+     * @param innerErrors Optional errors that will be wrapped by this higher level
+     *                    error. This value will be automatically coerced using `toError()`.
      */
-    constructor(message?: string, innerError?: unknown) {
+    constructor(message?: string, ...innerErrors: unknown[]) {
         super(message);
-        if (arguments.length >= 2) {
-            this.innerError = toError(innerError);
-            this.stack = `${NestedError.getErrorReport(this)
-                          }\n\n======= INNER ERROR =======\n\n${
-                            NestedError.getErrorReport(this.innerError)
-                          }`;
+        const thisErrorReport = NestedError.getErrorReport(this);
+        const errorLength = innerErrors.length;
+        if (errorLength === 1) {
+            this.innerErrors = toError(innerErrors[0]);
+            this.stack = `${thisErrorReport}\n\n======= INNER ERROR =======\n\n${NestedError.getErrorReport(this.innerErrors)}`;
+        } else if (errorLength > 1) {
+            this.innerErrors = innerErrors.map( (err) => toError(err) );
+            this.stack = `${thisErrorReport}\n\n${
+                this.innerErrors.map(
+                    (error, idx) => `======= INNER ERROR (${idx + 1} of ${errorLength}) =======\n\n${NestedError.getErrorReport(error)}`
+                ).join("\n\n")
+            }`;
         } else {
-            this.innerError = null;
-            this.stack      = NestedError.getErrorReport(this);
+            this.innerErrors = null;
+            this.stack      = thisErrorReport;
         }
     }
 }
