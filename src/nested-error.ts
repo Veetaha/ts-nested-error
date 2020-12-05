@@ -1,4 +1,3 @@
-
 /**
  * Subclass of standard `Error` that eagerly collects the callstack of the error
  * that caused it. This way you can investigate the core problem that happened
@@ -6,7 +5,6 @@
  * lower level).
  */
 export class NestedError extends Error {
-
     /**
      * Combined callstack of this error and the errors that it wraps.
      * If the JavaScript runtime doesn't support `Error::stack` property
@@ -15,9 +13,9 @@ export class NestedError extends Error {
     readonly stack: string;
 
     /**
-     * Optional reference to lower-level errors wrapped by this error.
+     * The list of lower-level errors wrapped by this error.
      */
-    readonly innerErrors: Error | Error[] | null;
+    readonly innerErrors: Error[];
 
     /**
      * Provides the first `Error` of the `innerErrors` (if it exists);
@@ -25,18 +23,10 @@ export class NestedError extends Error {
      *
      * @deprecated Please shift to using the `innerErrors` (with an 's') property.
      */
-    get innerError() {
-        if (!this.innerErrors) {
-            return null;
-        } else if (this.innerErrors instanceof Array) {
-            if (this.innerErrors.length === 0) {
-                return null;
-            } else {
-                return this.innerErrors[0];
-            }
-        } else {
-            return this.innerErrors;
-        }
+    get innerError(): Error | null {
+        return this.innerErrors.length === 0
+            ? null
+            : this.innerErrors[0];
     }
 
     private static readonly getErrorReport = typeof new Error().stack === 'string'
@@ -51,12 +41,20 @@ export class NestedError extends Error {
      * Returned function will pass accepted `Error` object directly to `NestedError`
      * as `innerErrors` by invoking `toError(err)` on it.
      *
+     * You'll most likely want to use this method with promises:
+     *
+     * ```ts
+     * userService.getPage().then(
+     *     data => console.log(`Hooray! data: ${data}`),
+     *     NestedError.rethrow('failed to fetch users page')
+     * );
+     * ```
+     *
      * @param message Message to attach `NestedError` created by the returned function.
      */
     static rethrow(message: string) {
         return (...errs: unknown[]) => { throw new this(message, ...errs); };
     }
-
 
     /**
      * Allocates an instance of `NestedError` with the given error `message` and
@@ -69,21 +67,21 @@ export class NestedError extends Error {
     constructor(message?: string, ...innerErrors: unknown[]) {
         super(message);
         const thisErrorReport = NestedError.getErrorReport(this);
-        const errorLength = innerErrors.length;
-        if (errorLength === 1) {
-            this.innerErrors = toError(innerErrors[0]);
-            this.stack = `${thisErrorReport}\n\n======= INNER ERROR =======\n\n${NestedError.getErrorReport(this.innerErrors)}`;
-        } else if (errorLength > 1) {
-            this.innerErrors = innerErrors.map( (err) => toError(err) );
-            this.stack = `${thisErrorReport}\n\n${
-                this.innerErrors.map(
-                    (error, idx) => `======= INNER ERROR (${idx + 1} of ${errorLength}) =======\n\n${NestedError.getErrorReport(error)}`
-                ).join("\n\n")
-            }`;
-        } else {
-            this.innerErrors = null;
-            this.stack      = thisErrorReport;
+        if (innerErrors.length === 1) {
+            let innerError = toError(innerErrors[0]);
+            this.innerErrors = [innerError];
+            const errReport = NestedError.getErrorReport(innerError);
+            this.stack = `${thisErrorReport}\n\n======= INNER ERROR =======\n\n${errReport}`;
+            return;
         }
+        this.innerErrors = innerErrors.map(toError);
+        const innerErrorReports = this.innerErrors
+            .map((error, idx) => {
+                const errReport = NestedError.getErrorReport(error);
+                return `======= INNER ERROR (${idx + 1} of ${innerErrors.length}) =======\n\n${errReport}`
+            })
+            .join("\n\n");
+        this.stack = `${thisErrorReport}\n\n${innerErrorReports}`;
     }
 }
 
@@ -112,7 +110,7 @@ export function toError(err: unknown) {
         return err instanceof Error
             ? err
             : new Error(`Value that is not an instance of Error was thrown: ${err}`);
-    } catch (err) {
+    } catch {
         return new Error(
             "Failed to stringify non-instance of Error that was thrown." +
             "This is possibly due to the fact that toString() method of the value" +

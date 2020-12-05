@@ -27,7 +27,7 @@ describe(nameof(NestedError), () => {
             } catch (thrownErr) {
                 expect(thrownErr).toHaveProperty('message', 'err-message');
                 expect(thrownErr).toHaveProperty('innerError', err);
-                expect(thrownErr).toHaveProperty('innerErrors', err);
+                expect(thrownErr).toHaveProperty('innerErrors', [err]);
             }
         });
         it('craetes an instance of derived class when called on dervied constructor', () => {
@@ -50,10 +50,10 @@ describe(nameof(NestedError), () => {
 
         it("returns null when an empty array is passed to the constructor", () => {
             const message = "Hello, Dolly!";
-            const errors:Error[] = [];
+            const errors: Error[] = [];
             const nestedError = new NestedError(message, ...errors);
             expect(nestedError).toHaveProperty('message', message);
-            expect(nestedError.innerErrors).toBeNull();
+            expect(nestedError.innerErrors).toStrictEqual([]);
             expect(nestedError.innerError).toBeNull();
         });
 
@@ -61,13 +61,10 @@ describe(nameof(NestedError), () => {
             const message = "Hello, Dolly!";
             const nestedError = new NestedError(message);
             expect(nestedError).toHaveProperty('message', message);
-            expect(nestedError.innerErrors).toBeNull();
+            expect(nestedError.innerErrors).toStrictEqual([]);
             expect(nestedError.innerError).toBeNull();
         });
-
-
     });
-
 });
 
 
