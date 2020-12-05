@@ -43,10 +43,9 @@ Everything is strongly typed and you may expect good inline documentation from V
 Property `.stack` of `NestedError` is guaranteed to contain a string with error
 callstack if it is supported by runtime or `"${err.name}: ${err.message}"` as a fallback.
 
-### InnerError property
+### InnerErrors property
 
-`NestedError` constructor automatically coerces the value passed as the second argument `toError()` object and saves it in `.innerError` property. 
-
+`NestedError` constructor automatically coerces the values passed after the first argument `toError()` object and saves them in `.innerErrors` array property.
 
 ### Promise error handler shortcut
 
@@ -87,12 +86,11 @@ stringify it and wrap into `Error` object to be returned.
 const err = new Error('oops');
 
 // noop if err instanceof Error
-toError(err) === err; 
+toError(err) === err;
 
 // wrapped 42 into Error with warning message
-(toError(42) instanceof Error) === true; 
+(toError(42) instanceof Error) === true;
 
 toError('non-error value').message === `Value that is not an instance of Error was thrown: non-error value`
 
 ```
-
