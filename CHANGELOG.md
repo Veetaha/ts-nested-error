@@ -6,6 +6,12 @@ All notable changes to `ts-nested-error` package are documented here.
 
 - Soon to come...
 
+## [1.2.1] - 2020-12-05
+
+### Fixed
+
+- Fix the deployed package (include the compiled javascript files).
+
 ## [1.2.0] - 2020-12-05
 
 ### Changed
@@ -22,7 +28,8 @@ All notable changes to `ts-nested-error` package are documented here.
 
 - Initial release
 
-[Unreleased]: https://github.com/veetaha/ts-nested-error/compare/v1.2.0...HEAD
+[Unreleased]: https://github.com/veetaha/ts-nested-error/compare/v1.2.1...HEAD
+[1.2.1]: https://github.com/veetaha/ts-nested-error/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/veetaha/ts-nested-error/commits/v1.2.0
 
 [#5]: https://github.com/Veetaha/ts-nested-error/pull/5

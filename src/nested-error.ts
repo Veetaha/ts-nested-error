@@ -68,17 +68,17 @@ export class NestedError extends Error {
         super(message);
         const thisErrorReport = NestedError.getErrorReport(this);
         if (innerErrors.length === 1) {
-            let innerError = toError(innerErrors[0]);
+            const innerError = toError(innerErrors[0]);
             this.innerErrors = [innerError];
             const errReport = NestedError.getErrorReport(innerError);
             this.stack = `${thisErrorReport}\n\n======= INNER ERROR =======\n\n${errReport}`;
             return;
         }
-        this.innerErrors = innerErrors.map(toError);
+        this.innerErrors = innerErrors.map(err => toError(err));
         const innerErrorReports = this.innerErrors
             .map((error, idx) => {
                 const errReport = NestedError.getErrorReport(error);
-                return `======= INNER ERROR (${idx + 1} of ${innerErrors.length}) =======\n\n${errReport}`
+                return `======= INNER ERROR (${idx + 1} of ${innerErrors.length}) =======\n\n${errReport}`;
             })
             .join("\n\n");
         this.stack = `${thisErrorReport}\n\n${innerErrorReports}`;
